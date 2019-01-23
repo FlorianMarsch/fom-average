@@ -2,7 +2,11 @@
   "name": "fom-average",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://florianmarsch.de/fom/",
   "dependencies": {
+    "@material-ui/core": "^3.9.0",
+    "@material-ui/icons": "^3.0.2",
+    "@material-ui/lab": "^3.0.0-alpha.28",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
     "react-scripts": "2.1.3"
