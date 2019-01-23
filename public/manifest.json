@@ -1,6 +1,6 @@
 {
   "name": "FOM Notenschnitt",
-  "short_name": "Berechnet den Schnitt und die Auswirkung jeder Prüfung",
+  "short_name": "FOM Noten",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
