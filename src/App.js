@@ -67,6 +67,7 @@ class App extends Component {
   };
 
   getAverage = (grades) => {
+    console.log(grades);
     return grades.map(element => { return element.grade * element.credit }).reduce((element, sum) => { return element + sum }, 0) / this.getCredits(grades);
   }
   getCredits = (grades) => {
@@ -77,6 +78,10 @@ class App extends Component {
   render() {
     const { classes } = this.props;
     const { dialogOpen, grades } = this.state;
+
+    const sorted = grades.sort((a, b) => {
+      return new Date(b.archived).getTime() - new Date(a.archived).getTime()
+    });
     return (
       <div>
         <AppBar position="static">
@@ -88,9 +93,7 @@ class App extends Component {
         </AppBar>
         <AddGradeDialog open={dialogOpen} handleClose={this.handleDialogClose} addGrade={this.handleAddGrade} />
         <List >
-          {grades.sort((a, b) => {
-            return new Date(b.archived).getTime() - new Date(a.archived).getTime()
-          }).map((grade, index) => {
+          {sorted.map((grade, index) => {
             return (
               <React.Fragment>
                 <ExpansionPanel>
@@ -132,7 +135,7 @@ class App extends Component {
                       </Grid>
                       <Grid item xs={3}>
                         {grade.averageUntil && <ListItemText
-                          primary={(this.getAverage(this.state.grades) - grade.averageUntil).toFixed(2)}
+                          primary={(this.getAverage(sorted.slice(index, sorted.length)) - grade.averageUntil).toFixed(2)}
                           secondary={`Auswirkung`}
                         />}
                       </Grid>
