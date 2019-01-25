@@ -14,8 +14,9 @@ import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
-import AddGradeDialog from './AddGradeDialog';
 import Grid from '@material-ui/core/Grid';
+import AddGradeDialog from './AddGradeDialog';
+import GraphView from './GraphView';
 
 const styles = theme => ({
   speedDial: {
@@ -82,16 +83,27 @@ class App extends Component {
     const sorted = grades.sort((a, b) => {
       return new Date(b.archived).getTime() - new Date(a.archived).getTime()
     });
+
+    const neededCredits = 137 - this.getCredits(grades);
+    const bestGrade = { grade: 1, credit: neededCredits };
+    const bestAverage = this.getAverage([...grades, bestGrade]);
+
+    const worstGrade = { grade: 4, credit: neededCredits };
+    const worstAverage = this.getAverage([...grades, worstGrade])
+
+    const currentAverage = this.getAverage(this.state.grades);
+
     return (
       <div>
         <AppBar position="static">
           <Toolbar>
             <Typography variant="h6" color="inherit" >
-              FOM Durchnschnittsnote : {this.getAverage(this.state.grades).toFixed(2)}
+              FOM Durchnschnittsnote : {currentAverage.toFixed(2)}
             </Typography>
           </Toolbar>
         </AppBar>
         <AddGradeDialog open={dialogOpen} handleClose={this.handleDialogClose} addGrade={this.handleAddGrade} />
+        <GraphView grades={grades} average={currentAverage} min={bestAverage} max={worstAverage} />
         <List >
           {sorted.map((grade, index) => {
             return (
