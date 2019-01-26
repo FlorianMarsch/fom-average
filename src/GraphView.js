@@ -9,40 +9,6 @@ const getAverageLineData = (grades, average) => {
     return averageLineData;
 }
 
-
-
-/**
- * Generate random random for candle stick chart
- * @param {number} total - Total number of values.
- * @returns {Array} Array of data.
- */
-function buildRandomBinnedData(total) {
-    const result = Array(total)
-        .fill(0)
-        .map((x, i) => {
-            const values = [
-                Math.random(),
-                Math.random(),
-                Math.random(),
-                Math.random()
-            ]
-                .sort()
-                .map(d => Math.floor(d * 100));
-            const y = (values[2] + values[1]) / 2;
-            return {
-                x: i,
-                y,
-                yHigh: values[3],
-                yOpen: values[2],
-                yClose: values[1],
-                yLow: values[0],
-                color: y < 25 ? '#EF5D28' : '#12939A',
-                opacity: y > 75 ? 0.7 : 1
-            };
-        });
-    return result;
-}
-
 export default class GraphView extends React.Component {
 
 
@@ -56,10 +22,6 @@ export default class GraphView extends React.Component {
         }
 
         const length = grades.length;
-
-        const data = grades.sort((a, b) => {
-            return new Date(a.archived).getTime() - new Date(b.archived).getTime()
-        })
 
 
         return (
@@ -99,84 +61,3 @@ export default class GraphView extends React.Component {
             </div>)
     }
 }
-
-
-
-
-const predefinedClassName =
-    'rv-xy-plot__series rv-xy-plot__series--candlestick';
-
-class Candlestick extends AbstractSeries {
-    render() {
-        const { className, data, marginLeft, marginTop } = this.props;
-        if (!data) {
-            return null;
-        }
-
-        const xFunctor = this._getAttributeFunctor('x');
-        const yFunctor = this._getAttributeFunctor('y');
-        const strokeFunctor =
-            this._getAttributeFunctor('stroke') || this._getAttributeFunctor('color');
-        const fillFunctor =
-            this._getAttributeFunctor('fill') || this._getAttributeFunctor('color');
-        const opacityFunctor = this._getAttributeFunctor('opacity');
-
-        const distance = Math.abs(xFunctor(data[1]) - xFunctor(data[0])) * 0.2;
-
-        return (
-            <g
-                className={`${predefinedClassName} ${className}`}
-                transform={`translate(${marginLeft},${marginTop})`}
-            >
-                {data.map((d, i) => {
-                    const xTrans = xFunctor(d);
-                    // Names of values borrowed from here https://en.wikipedia.org/wiki/Candlestick_chart
-                    const yHigh = yFunctor({ ...d, y: d.yHigh });
-                    const yOpen = yFunctor({ ...d, y: d.yOpen });
-                    const yClose = yFunctor({ ...d, y: d.yClose });
-                    const yLow = yFunctor({ ...d, y: d.yLow });
-
-                    const lineAttrs = {
-                        stroke: strokeFunctor && strokeFunctor(d)
-                    };
-
-                    const xWidth = distance * 2;
-                    return (
-                        <g
-                            transform={`translate(${xTrans})`}
-                            opacity={opacityFunctor ? opacityFunctor(d) : 1}
-                            key={i}
-                            onClick={e => this._valueClickHandler(d, e)}
-                            onMouseOver={e => this._valueMouseOverHandler(d, e)}
-                            onMouseOut={e => this._valueMouseOutHandler(d, e)}
-                        >
-                            <line
-                                x1={-xWidth}
-                                x2={xWidth}
-                                y1={yHigh}
-                                y2={yHigh}
-                                {...lineAttrs}
-                            />
-                            <line x1={0} x2={0} y1={yHigh} y2={yLow} {...lineAttrs} />
-                            <line
-                                x1={-xWidth}
-                                x2={xWidth}
-                                y1={yLow}
-                                y2={yLow}
-                                {...lineAttrs}
-                            />
-                            <rect
-                                x={-xWidth}
-                                width={Math.max(xWidth * 2, 0)}
-                                y={yOpen}
-                                height={Math.abs(yOpen - yClose)}
-                                fill={fillFunctor && fillFunctor(d)}
-                            />
-                        </g>
-                    );
-                })}
-            </g>
-        );
-    }
-}
-
