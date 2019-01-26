@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - "stable"
+cache:
+  directories:
+    - node_modules
+script:
+  - npm run-script build
+after_success:
+- curl --ftp-create-dirs
+       -T /build
+       sftp://${SFTP_USER}:${SFTP_PASSWORD}@${SFTP_HOST}/${SFTP_HOME}/fom/
