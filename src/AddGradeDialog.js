@@ -19,6 +19,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import FormControl from '@material-ui/core/FormControl';
 import TextField from '@material-ui/core/TextField';
 import Select from '@material-ui/core/Select';
+
+import Grid from '@material-ui/core/Grid';
+
 const styles = {
     appBar: {
         position: 'relative',
@@ -58,10 +61,14 @@ class AddGradeDialog extends React.Component {
         return (grade.exam * 1 + grade.assignment * 1 + grade.presentation * 1) / tests;
 
     }
+    canSave = () => {
+
+        const { name, credit, exam, assignment, presentation } = this.state;
+        return (exam || assignment || presentation) && name !== "" && credit !== 0;
+    }
 
     render() {
         const { classes } = this.props;
-        const { name, credit, exam, assignment, presentation } = this.state;
 
         let credits = [];
         for (let i = 1; i < 15; i++) {
@@ -108,7 +115,7 @@ class AddGradeDialog extends React.Component {
                             <Typography variant="h6" color="inherit" className={classes.flex}>
                                 Kurs hinzufügen
                             </Typography>
-                            <Button disabled={(exam !== 0 && assignment !== 0 && presentation !== 0) || name === "" || credit === 0} color="inherit" onClick={() => {
+                            <Button disabled={!this.canSave()} color="inherit" onClick={() => {
                                 this.props.addGrade({ ...this.state, grade: this.calcGrade(this.state) });
                                 this.setState({
                                     name: "",
@@ -123,9 +130,17 @@ class AddGradeDialog extends React.Component {
               </Button>
                         </Toolbar>
                     </AppBar>
-                    <List>
-                        <ListItem >
+                    <Grid container
+                        direction="row"
+                        justify="flex-start"
+                        alignItems="center"
+                        spacing={40}
+
+                        style={{ padding: '5%' }}
+                    >
+                        <Grid item xs={12}>
                             <TextField
+                                style={{ width: '100%' }}
                                 id="standard-name"
                                 label="Module"
                                 value={this.state.name}
@@ -135,18 +150,20 @@ class AddGradeDialog extends React.Component {
                                         name: e.target.value ? e.target.value : ""
                                     });
                                 }}
-                                margin="normal"
                             />
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
+
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12}>
                             <InputLabel>Credits</InputLabel>
                             <Select
+
+                                style={{ width: '100%' }}
                                 value={this.state.credit}
                                 onChange={(e) => {
                                     this.setState({
                                         ...this.state,
-                                        credit: e.target.value ? e.target.value : ""
+                                        credit: e.target.value ? e.target.value : 0
                                     });
                                 }}
 
@@ -157,11 +174,12 @@ class AddGradeDialog extends React.Component {
                                 {credits}
 
                             </Select>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12}>
                             <InputLabel>Klausur</InputLabel>
                             <Select
+                                style={{ width: '100%' }}
                                 value={this.state.exam}
                                 onChange={(e) => {
                                     this.setState({
@@ -177,11 +195,12 @@ class AddGradeDialog extends React.Component {
                                 {grades}
 
                             </Select>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12}>
                             <InputLabel>Hausarbeit</InputLabel>
                             <Select
+                                style={{ width: '100%' }}
                                 value={this.state.assignment}
                                 onChange={(e) => {
                                     this.setState({
@@ -197,11 +216,13 @@ class AddGradeDialog extends React.Component {
                                 {grades}
 
                             </Select>
-                        </ListItem>
-                        <Divider />
-                        <ListItem>
+                            <Divider />
+                        </Grid>
+                        <Grid item xs={12}>
                             <InputLabel>Präsi</InputLabel>
                             <Select
+
+                                style={{ width: '100%' }}
                                 value={this.state.presentation}
                                 onChange={(e) => {
                                     this.setState({
@@ -217,10 +238,10 @@ class AddGradeDialog extends React.Component {
                                 {grades}
 
                             </Select>
-                        </ListItem>
-                    </List>
+                        </Grid>
+                    </Grid>
                 </Dialog>
-            </div>
+            </div >
         );
     }
 }
