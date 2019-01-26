@@ -1,5 +1,5 @@
 import React from 'react';
-import { XYPlot, XAxis, YAxis, HorizontalGridLines, LineSeries, FlexibleWidthXYPlot, AbstractSeries, MarkSeries } from 'react-vis';
+import { YAxis, LineSeries, FlexibleWidthXYPlot, AbstractSeries, MarkSeries } from 'react-vis';
 
 const getAverageLineData = (grades, average) => {
     const averageLineData = grades.map((grade, index) => {
