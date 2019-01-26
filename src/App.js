@@ -20,7 +20,7 @@ import GraphView from './GraphView';
 
 const styles = theme => ({
   speedDial: {
-    position: 'absolute',
+    position: 'fixed',
     bottom: theme.spacing.unit * 2,
     right: theme.spacing.unit * 3,
 
@@ -95,7 +95,7 @@ class App extends Component {
 
     return (
       <div>
-        <AppBar position="static">
+        <AppBar position="sticky">
           <Toolbar>
             <Typography variant="h6" color="inherit" >
               FOM Durchnschnittsnote : {currentAverage.toFixed(2)}
